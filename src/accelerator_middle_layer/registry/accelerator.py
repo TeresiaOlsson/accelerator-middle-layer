@@ -1,5 +1,6 @@
 """ Module for the AO and registry functionality."""
 
+from typing import Hashable
 from ..config import AcceleratorConfig
 from .utils import WildcardDict
 
@@ -29,7 +30,6 @@ class Accelerator():
         else:
             print('No backends have been configured.')
 
-
     @property
     def devices(self):
         if self._devices:
@@ -44,6 +44,30 @@ class Accelerator():
         else:
             print('No families have been configured.')
 
+
     def __str__(self):
         """Pretty printing of the accelerator configuration."""
         pass
+
+
+    def load(filepath: str) -> Accelerator:
+        """Load accelerator from file."""
+        pass
+
+    def create_devices(name: Hashable, backend: Hashable) -> Device:
+        """Create devices for a specific backend."""
+
+        # TODO: add searching and creating families
+
+        # Get the devices
+        devices = self._devices.get(name)
+        if not devices:
+            raise Exception(f"No devices found for {name}.")
+
+        # Get the backend
+        backend = self._backends.get(backend)
+        if not backend:
+            raise Exception(f"No backend found for {backend}.")
+        
+        # Pass the config objects to the device backend
+        return DeviceFactor.create_devices(devices, backend)
