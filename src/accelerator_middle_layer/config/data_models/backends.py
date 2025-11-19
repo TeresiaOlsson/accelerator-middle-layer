@@ -1,38 +1,44 @@
 """ Configuration models for backends."""
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from abc import ABC
-from typing import Hashable, Optional, Union
+from typing import Hashable, Optional, Union, Literal, Annotated
 from enum import Enum
 
 
 class BackendConfig(BaseModel, ABC):
     name: Hashable
+    type: str
 
 
-class TANGOConfig(BackendConfig):
+class TangoConfig(BackendConfig):
+    type: Literal["tango"]
     host: Hashable
 
 
-class EPICSType(Enum):
+class EpicsProtocol(Enum):
+    CA = "ca"
+    PVA = "pva"
 
-    CA = 'CA' # Channel Access
-    PV = 'PV' # PV Access
+    def __repr__(self):
+        return self.value 
 
-
-class EPICSConfig(BackendConfig):
-    access_type: EPICSType
-    pv_prefix: Optional[Hashable] = ""
-
-
-class DOOCSConfig(BackendConfig):
-    pass
+class EpicsConfig(BackendConfig):
+    type: Literal["epics"]
+    protocol: Optional[EpicsProtocol] = EpicsProtocol.CA
+    prefix: Optional[Hashable] = ""
 
 
-class SimulationEngine(Enum):
-    PYAT = 'pyat'
+BackendUnion = Annotated[
+    Union[TangoConfig, EpicsConfig],
+    Field(discriminator='type')
+]
+
+# class SimulationEngine(Enum):
+#     PYAT = 'pyat'
 
 
-class SimulatorConfig(BackendConfig):
-    type: SimulationEngine
-    model: str  # Path to the lattice model.
+# class SimulatorConfig(BackendConfig):
+#     type: SimulationEngine
+#     model: str  # Path to the lattice model.
+

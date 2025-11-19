@@ -1,0 +1,13 @@
+# Configuration for the MLS storage ring
+facility: MLS
+machine: storage_ring
+
+backends:
+  - name: live
+    type: epics
+    protocol: ca
+
+  - name: twin
+    type: epics
+    protocol: ca
+    prefix: a3744

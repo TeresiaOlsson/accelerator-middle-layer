@@ -1,0 +1,1 @@
+from .registry.accelerator import Accelerator
