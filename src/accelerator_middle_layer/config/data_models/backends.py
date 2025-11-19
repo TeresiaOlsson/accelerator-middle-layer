@@ -29,7 +29,7 @@ class EpicsConfig(BackendConfig):
     prefix: Optional[Hashable] = ""
 
 
-BackendUnion = Annotated[
+Backends = Annotated[
     Union[TangoConfig, EpicsConfig],
     Field(discriminator='type')
 ]

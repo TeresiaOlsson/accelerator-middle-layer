@@ -3,6 +3,7 @@
 from typing import Hashable
 from ..config import AcceleratorConfig
 from .utils import WildcardDict
+from ..config.config_loader import load_config
 
 class Accelerator():
 
@@ -10,9 +11,9 @@ class Accelerator():
 
         self._facility = config.facility
         self._machine = config.machine
-        self._backends = config.backends
-        self._devices = WildcardDict(config.devices) # Dict which can use wildcards
-        self._families = config.families
+        self._backends = {item.name: item for item in config.backends} 
+        # self._devices = WildcardDict(config.devices) # Dict which can use wildcards
+        # self._families = config.families
 
 
     @property
@@ -30,44 +31,38 @@ class Accelerator():
         else:
             print('No backends have been configured.')
 
-    @property
-    def devices(self):
-        if self._devices:
-            return self._devices
-        else:
-            print('No devices have been configured.')
+    # @property
+    # def devices(self):
+    #     if self._devices:
+    #         return self._devices
+    #     else:
+    #         print('No devices have been configured.')
 
-    @property
-    def families(self):
-        if self._families:
-            return self._families
-        else:
-            print('No families have been configured.')
+    # @property
+    # def families(self):
+    #     if self._families:
+    #         return self._families
+    #     else:
+    #         print('No families have been configured.')
 
 
-    def __str__(self):
+    def __repr__(self):
         """Pretty printing of the accelerator configuration."""
-        pass
 
+        backend_details = "\n".join(
+            f"  - {name}: {backend.model_dump()}" 
+            for name, backend in self.backends.items()
+        )
 
-    def load(filepath: str) -> Accelerator:
-        """Load accelerator from file."""
-        pass
+        return (
+            f"Facility: {self.facility}\n"
+            f"Machine: {self.machine}\n"
+            f"Backends:\n{backend_details}"
+        )
+    
 
-    def create_devices(name: Hashable, backend: Hashable) -> Device:
-        """Create devices for a specific backend."""
+    def load(source: str) -> "Accelerator":
+        """Create accelerator by loading the config."""
 
-        # TODO: add searching and creating families
+        return Accelerator(load_config(source, AcceleratorConfig))
 
-        # Get the devices
-        devices = self._devices.get(name)
-        if not devices:
-            raise Exception(f"No devices found for {name}.")
-
-        # Get the backend
-        backend = self._backends.get(backend)
-        if not backend:
-            raise Exception(f"No backend found for {backend}.")
-        
-        # Pass the config objects to the device backend
-        return DeviceFactor.create_devices(devices, backend)
