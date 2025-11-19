@@ -28,6 +28,8 @@ class EpicsConfig(BackendConfig):
     protocol: Optional[EpicsProtocol] = EpicsProtocol.CA
     prefix: Optional[Hashable] = ""
 
+    class Config:
+        use_enum_values = True
 
 Backends = Annotated[
     Union[TangoConfig, EpicsConfig],

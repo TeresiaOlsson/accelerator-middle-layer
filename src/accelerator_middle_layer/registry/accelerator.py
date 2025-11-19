@@ -1,33 +1,37 @@
-""" Module for the AO and registry functionality."""
+""" Module for the accelerator object."""
 
-from typing import Hashable
-from ..config import AcceleratorConfig
-from .utils import WildcardDict
+from ..config import AcceleratorConfig, ConfigManager
+#from typing import Hashable
+
+#from .utils import WildcardDict
 from ..config.config_loader import load_config
+import yaml
 
 class Accelerator():
 
     def __init__(self, config: AcceleratorConfig):
 
-        self._facility = config.facility
-        self._machine = config.machine
-        self._backends = {item.name: item for item in config.backends} 
+        self._config_manager = ConfigManager(config)
+
+        #self._facility = config.facility
+        #self._machine = config.machine
+        #self._backends = {item.name: item for item in config.backends} 
         # self._devices = WildcardDict(config.devices) # Dict which can use wildcards
         # self._families = config.families
 
-
     @property
     def facility(self):
-        return self._facility
+        return self._config_manager.get_attr("facility")
 
     @property
     def machine(self):
-        return self._machine
+        return self._config_manager.get_attr("machine")
 
     @property
     def backends(self):
-        if self._backends:
-            return self._backends
+        backends = self._config_manager.backends_by_name
+        if backends:
+            return backends
         else:
             print('No backends have been configured.')
 
@@ -49,8 +53,10 @@ class Accelerator():
     def __repr__(self):
         """Pretty printing of the accelerator configuration."""
 
+        #TODO: make this nicer.
+
         backend_details = "\n".join(
-            f"  - {name}: {backend.model_dump()}" 
+            f"  - {name}: \n{yaml.dump(backend.model_dump(mode='json'), sort_keys=False, indent=4)}"
             for name, backend in self.backends.items()
         )
 
