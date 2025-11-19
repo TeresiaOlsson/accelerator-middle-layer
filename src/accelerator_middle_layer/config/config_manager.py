@@ -12,7 +12,10 @@ class ConfigManager:
         }
 
     def get_attr(self, attr_name: str):
-        return getattr(self._config, attr_name) 
+        return getattr(self._config, attr_name)
+
+    def get_backend(self, key: str):
+        return self.backends_by_name[key]
       
 
     #def to_dict(self):
