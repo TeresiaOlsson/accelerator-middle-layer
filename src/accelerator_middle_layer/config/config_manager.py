@@ -6,16 +6,18 @@ class ConfigManager:
     def __init__(self, config: AcceleratorConfig):
         self._config = config
 
-        self.backends_by_name = {
+        self.backend_registry = {
             backend.name: backend
-            for backend in getattr(config, "backends", [])
-        }
+            for backend in config.backends
+        }        
+
+#        self.backend_registry = {
+#            backend.name: backend
+#            for backend in getattr(config, "backends", [])
+#        }
 
     def get_attr(self, attr_name: str):
         return getattr(self._config, attr_name)
-
-    def get_backend(self, key: str):
-        return self.backends_by_name[key]
       
 
     #def to_dict(self):

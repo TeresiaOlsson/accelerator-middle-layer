@@ -1,17 +1,21 @@
 """ Module for the accelerator object."""
 
-from ..config import AcceleratorConfig, ConfigManager
+from .config import AcceleratorConfig, ConfigManager
+from .config.config_loader import load_config
+import yaml
 #from typing import Hashable
 
 #from .utils import WildcardDict
-from ..config.config_loader import load_config
-import yaml
+
 
 class Accelerator():
 
     def __init__(self, config: AcceleratorConfig):
 
+        # Create the config manager
         self._config_manager = ConfigManager(config)
+
+        # TODO: create device/family factory
 
         #self._facility = config.facility
         #self._machine = config.machine
@@ -29,7 +33,7 @@ class Accelerator():
 
     @property
     def backends(self):
-        backends = self._config_manager.backends_by_name
+        backends = self._config_manager.backend_registry
         if backends:
             return backends
         else:

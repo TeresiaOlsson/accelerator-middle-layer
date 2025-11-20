@@ -1,1 +1,1 @@
-from .registry.accelerator import Accelerator
+from .accelerator import Accelerator
