@@ -16,10 +16,6 @@ class Accelerator():
         self._config_manager = ConfigManager(config)
 
         # TODO: create device/family factory
-
-        #self._facility = config.facility
-        #self._machine = config.machine
-        #self._backends = {item.name: item for item in config.backends} 
         # self._devices = WildcardDict(config.devices) # Dict which can use wildcards
         # self._families = config.families
 
