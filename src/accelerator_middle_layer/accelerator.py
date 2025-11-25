@@ -3,6 +3,7 @@
 from .config import AcceleratorConfig, ConfigManager
 from .config.config_loader import load_config
 import yaml
+
 #from typing import Hashable
 
 #from .utils import WildcardDict
@@ -29,12 +30,8 @@ class Accelerator():
 
     @property
     def backends(self):
-        backends = self._config_manager.backend_registry
-        if backends:
-            return backends
-        else:
-            print('No backends have been configured.')
-
+        return self._config_manager.backend_registry
+       
     # @property
     # def devices(self):
     #     if self._devices:

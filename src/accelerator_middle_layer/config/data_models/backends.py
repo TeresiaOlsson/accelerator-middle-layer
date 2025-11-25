@@ -7,7 +7,7 @@ from enum import Enum
 
 
 class BackendConfig(BaseModel, ABC):
-    name: Hashable
+    name: str
     type: str
 
 
